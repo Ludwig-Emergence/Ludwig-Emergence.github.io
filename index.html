@@ -3,48 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ludwig Emergence</title>
+    <title>AI使用指南：从入门到进阶的四个层级 | Ludwig Emergence</title>
+    <meta name="description" content="MEM研究生课程笔记：AI技术革命的四个使用层级，从网页端到OpenClaw，手把手搭建环境与获取API Key。">
+    <meta name="keywords" content="AI, Claude Code, Codex, OpenClaw, API Key, 小米MiMo, MEM, 人工智能">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            color: #1a1a2e;
+            background: #fafafa;
+        }
+        /* Header */
+        .header {
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             color: #fff;
-        }
-        .container {
+            padding: 3rem 2rem;
             text-align: center;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            max-width: 800px;
+            margin: 0 auto 1rem;
+            line-height: 1.3;
+        }
+        .header .subtitle {
+            color: #a8a8d8;
+            font-size: 1rem;
+        }
+        .header .meta {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #8888aa;
+        }
+        /* Nav */
+        .nav {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav a {
+            color: #302b63;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .nav .back { color: #666; }
+        /* Content */
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 2rem;
         }
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            letter-spacing: 2px;
+        .content h2 {
+            font-size: 1.6rem;
+            color: #302b63;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #302b63;
         }
-        p {
+        .content h3 {
             font-size: 1.2rem;
-            color: #a8a8d8;
-            margin-bottom: 2rem;
+            color: #24243e;
+            margin: 1.5rem 0 0.8rem;
         }
-        .status {
+        .content p {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .content ul, .content ol {
+            margin: 0.5rem 0 1.5rem 1.5rem;
+        }
+        .content li {
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+        /* Level cards */
+        .level-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid;
+        }
+        .level-card.l1 { border-left-color: #95a5a6; }
+        .level-card.l2 { border-left-color: #3498db; }
+        .level-card.l3 { border-left-color: #e67e22; }
+        .level-card.l4 { border-left-color: #e74c3c; }
+        .level-card .level-tag {
             display: inline-block;
-            padding: 0.5rem 1.5rem;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50px;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.8rem;
+        }
+        .l1 .level-tag { background: #95a5a6; }
+        .l2 .level-tag { background: #3498db; }
+        .l3 .level-tag { background: #e67e22; }
+        .l4 .level-tag { background: #e74c3c; }
+        .level-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a2e;
+        }
+        .level-card p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        /* Code blocks */
+        .code-block {
+            background: #1a1a2e;
+            color: #eee;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-family: "SF Mono", "Fira Code", monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+        .code-block .comment { color: #666; }
+        .code-block .cmd { color: #7bed9f; }
+        /* Info box */
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        .info-box.warn {
+            background: #fff3cd;
+            border-left-color: #f39c12;
+        }
+        .info-box.success {
+            background: #d4edda;
+            border-left-color: #27ae60;
+        }
+        .info-box strong { color: #1a1a2e; }
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        th {
+            background: #302b63;
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
             font-size: 0.9rem;
-            color: #7bed9f;
-            border: 1px solid #7bed9f;
+        }
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            color: #444;
+        }
+        tr:last-child td { border-bottom: none; }
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem 0;
+            background: linear-gradient(135deg, #302b63, #24243e);
+            border-radius: 12px;
+            color: #fff;
+        }
+        .cta h3 { color: #fff; margin-bottom: 0.5rem; }
+        .cta p { color: #a8a8d8; }
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #eee;
+            margin-top: 3rem;
+        }
+        /* Mobile */
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.6rem; }
+            .content { padding: 1.2rem; }
+            .level-card { padding: 1rem; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Ludwig Emergence</h1>
-        <p>正在建设中...</p>
-        <div class="status">✓ 网站已上线</div>
+    <div class="nav">
+        <div class="nav-inner">
+            <a href="/" class="back">← Ludwig Emergence</a>
+            <a href="/">首页</a>
+        </div>
+    </div>
+
+    <div class="header">
+        <h1>AI使用指南：从入门到进阶的四个层级</h1>
+        <div class="subtitle">MEM研究生「AI技术革命」课程笔记 + 实操指南</div>
+        <div class="meta">2026年6月28日 · 阅读约10分钟</div>
+    </div>
+
+    <div class="content">
+
+        <p>今天「AI技术革命」课上，老师提了一个问题：<strong>你们平时怎么用AI？</strong></p>
+        <p>大部分同学的回答是"用豆包聊天"、"问GPT问题"、"让Kimi帮我写东西"。这没有错，但这只是冰山一角。</p>
+        <p>老师把AI的使用分成了<strong>四个层级</strong>，从"消费者"到"驾驭者"，每一层的效率和可能性都是指数级的跃迁。</p>
+        <p>这篇文章把课上的知识点整理出来，<strong>附带手把手的搭建教程</strong>，帮你从Level 1往上走。</p>
+
+        <h2>🎯 四个层级总览</h2>
+
+        <div class="level-card l1">
+            <span class="level-tag">Level 1</span>
+            <h4>网页/APP 端使用 AI</h4>
+            <p><strong>代表：</strong>豆包、ChatGPT、Kimi、文心一言、通义千问</p>
+            <p><strong>特征：</strong>打开网页或APP，像聊天一样使用AI。门槛最低，功能也最受限。你只能用别人给你的界面，无法自定义，无法自动化。</p>
+            <p><strong>类比：</strong>就像用计算器——能算数，但你没法让计算器自动帮你做报表。</p>
+        </div>
+
+        <div class="level-card l2">
+            <span class="level-tag">Level 2</span>
+            <h4>在 IDE 中使用 AI</h4>
+            <p><strong>代表：</strong>Cursor、GitHub Copilot、Windsurf、VS Code + AI插件</p>
+            <p><strong>特征：</strong>AI嵌入到编程工具中，能看懂你的代码上下文，自动补全、重构、Debug。你需要会基本的编程环境操作。</p>
+            <p><strong>类比：</strong>从计算器升级到Excel——能处理更复杂的任务，能复用模板。</p>
+        </div>
+
+        <div class="level-card l3">
+            <span class="level-tag">Level 3</span>
+            <h4>AI 编程代理（Coding Agent）</h4>
+            <p><strong>代表：</strong>Claude Code、Codex（OpenAI）、Gemini CLI</p>
+            <p><strong>特征：</strong>AI不再只是辅助，而是<strong>自主执行</strong>。你给它一个目标，它自己读代码、改代码、运行测试、修复错误。需要命令行操作能力。</p>
+            <p><strong>类比：</strong>从自己干活升级到有个助手——你出想法，它出活。</p>
+        </div>
+
+        <div class="level-card l4">
+            <span class="level-tag">Level 4</span>
+            <h4>AI 工作流平台（Agent Platform）</h4>
+            <p><strong>代表：</strong>OpenClaw、Hermes</p>
+            <p><strong>特征：</strong>AI具备<strong>持久记忆、多工具调用、自动化工作流</strong>。它能读你的文件、发消息、管理日程、操作浏览器、调用各种API。是真正的"AI员工"。</p>
+            <p><strong>类比：</strong>从一个助手升级到一个团队——有记忆，能协作，能主动干活。</p>
+        </div>
+
+        <h2>📊 层级对比</h2>
+
+        <table>
+            <tr>
+                <th>维度</th>
+                <th>L1 网页端</th>
+                <th>L2 IDE</th>
+                <th>L3 Agent</th>
+                <th>L4 平台</th>
+            </tr>
+            <tr>
+                <td>门槛</td>
+                <td>零门槛</td>
+                <td>会装软件</td>
+                <td>会命令行</td>
+                <td>会配置服务</td>
+            </tr>
+            <tr>
+                <td>能做的事</td>
+                <td>聊天、问答</td>
+                <td>写代码、Debug</td>
+                <td>自主开发项目</td>
+                <td>自动化一切</td>
+            </tr>
+            <tr>
+                <td>效率提升</td>
+                <td>1.5x</td>
+                <td>3-5x</td>
+                <td>10x</td>
+                <td>50x+</td>
+            </tr>
+            <tr>
+                <td>需要的技能</td>
+                <td>打字</td>
+                <td>基础编程</td>
+                <td>命令行 + 编程</td>
+                <td>系统配置能力</td>
+            </tr>
+        </table>
+
+        <h2>🔧 从 Level 1 到 Level 3：手把手搭建</h2>
+
+        <h3>前置准备：获取 API Key</h3>
+
+        <p>从Level 2开始，你需要<strong>API Key</strong>。简单理解：网页端是"用别人的车"，API Key是"拿到车钥匙，想开去哪就去哪"。</p>
+
+        <div class="info-box">
+            <strong>💡 什么是 API Key？</strong><br>
+            API Key 就像一把钥匙。你拿着这把钥匙，任何支持这个AI的软件都能调用它。网页端只能在一个界面用，API Key 则到处都能用。
+        </div>
+
+        <h3>推荐：小米 MiMo（国内直连，无需翻墙）</h3>
+
+        <p>如果你还没有"翻墙"能力，<strong>小米 MiMo</strong> 是最佳起点：</p>
+
+        <ol>
+            <li>打开 <strong>https://mimo.xiaomi.com</strong></li>
+            <li>注册/登录小米账号</li>
+            <li>进入开发者中心，申请 API Key</li>
+            <li>复制你的 Key，保存好（不要泄露给别人）</li>
+        </ol>
+
+        <div class="info-box success">
+            <strong>✅ MiMo 优势：</strong>国内直连、中文友好、有免费额度、兼容 OpenAI 格式（大部分工具都能直接用）
+        </div>
+
+        <h3>其他 API 来源（部分需要翻墙）</h3>
+
+        <table>
+            <tr>
+                <th>服务</th>
+                <th>是否需要翻墙</th>
+                <th>费用</th>
+                <th>特点</th>
+            </tr>
+            <tr>
+                <td>小米 MiMo</td>
+                <td>❌ 不需要</td>
+                <td>有免费额度</td>
+                <td>国内首选，兼容性强</td>
+            </tr>
+            <tr>
+                <td>DeepSeek</td>
+                <td>❌ 不需要</td>
+                <td>很便宜</td>
+                <td>国内，性价比极高</td>
+            </tr>
+            <tr>
+                <td>Claude（Anthropic）</td>
+                <td>✅ 需要</td>
+                <td>$20/月起</td>
+                <td>编程能力最强</td>
+            </tr>
+            <tr>
+                <td>ChatGPT（OpenAI）</td>
+                <td>✅ 需要</td>
+                <td>$20/月起</td>
+                <td>生态最完善</td>
+            </tr>
+        </table>
+
+        <h2>🚀 Level 2：在 IDE 中使用 AI</h2>
+
+        <p><strong>推荐工具：Cursor</strong>（最容易上手的 AI 编程 IDE）</p>
+
+        <ol>
+            <li>下载 <strong>Cursor</strong>：https://cursor.sh</li>
+            <li>安装后打开，它长得像 VS Code（因为基于 VS Code 改的）</li>
+            <li>在设置中填入你的 API Key（或用 Cursor 自带的额度）</li>
+            <li>打开任意代码文件，<code>Ctrl+K</code> 让 AI 帮你写/改代码</li>
+        </ol>
+
+        <div class="info-box warn">
+            <strong>⚠️ 注意：</strong>Cursor 本身需要翻墙下载。如果暂时不会翻墙，可以先用国内替代方案 <strong>Trae</strong>（字节跳动出品，国内可下载）。
+        </div>
+
+        <h2>🚀 Level 3：AI 编程代理</h2>
+
+        <p><strong>代表工具：Claude Code</strong></p>
+
+        <p>Claude Code 不是一个软件界面，而是<strong>在终端（命令行）里运行的AI</strong>。你跟它说"帮我做一个网站"，它会自己创建文件、写代码、运行、调试，全程自主完成。</p>
+
+        <h3>安装步骤</h3>
+
+        <div class="code-block">
+            <span class="comment"># 1. 先安装 Node.js（去 https://nodejs.org 下载安装）</span><br>
+            <br>
+            <span class="comment"># 2. 安装 Claude Code</span><br>
+            <span class="cmd">npm install -g @anthropic-ai/claude-code</span><br>
+            <br>
+            <span class="comment"># 3. 设置 API Key</span><br>
+            <span class="cmd">export ANTHROPIC_API_KEY=你的key</span><br>
+            <br>
+            <span class="comment"># 4. 启动</span><br>
+            <span class="cmd">claude</span>
+        </div>
+
+        <p>启动后，你就像聊天一样告诉它要做什么。它会自动操作你的文件系统，写代码、运行命令、修复错误。</p>
+
+        <div class="info-box">
+            <strong>💡 Codex（OpenAI）</strong> 类似，但目前更偏向云端运行，需要 ChatGPT Plus/Pro 订阅。对新手来说 Claude Code 更直观。
+        </div>
+
+        <h2>🚀 Level 4：AI 工作流平台</h2>
+
+        <p><strong>代表：OpenClaw</strong></p>
+
+        <p>OpenClaw 不只是一个编程工具，而是一个<strong>AI运行平台</strong>。它可以：</p>
+
+        <ul>
+            <li>连接你的微信、飞书、Discord 等消息平台</li>
+            <li>读写你的文件、管理日程、发邮件</li>
+            <li>操作浏览器、调用各种 API</li>
+            <li>拥有<strong>持久记忆</strong>——它记得你之前说过什么</li>
+            <li>自动化定时任务，比如每天早上给你发天气和日程</li>
+        </ul>
+
+        <p>简单说，Level 3 是"AI帮你写代码"，Level 4 是<strong>"AI帮你处理一切"</strong>。</p>
+
+        <div class="code-block">
+            <span class="comment"># 安装 OpenClaw</span><br>
+            <span class="cmd">npm install -g openclaw</span><br>
+            <br>
+            <span class="comment"># 初始化配置</span><br>
+            <span class="cmd">openclaw init</span><br>
+            <br>
+            <span class="comment"># 启动</span><br>
+            <span class="cmd">openclaw start</span>
+        </div>
+
+        <div class="info-box warn">
+            <strong>⚠️ Level 4 的门槛较高</strong>，建议先把 Level 2 和 Level 3 玩熟了再尝试。但一旦搭建成功，效率提升是质变级别的。
+        </div>
+
+        <h2>📌 行动建议</h2>
+
+        <p><strong>如果你现在是 Level 1（大多数人），建议路径：</strong></p>
+
+        <ol>
+            <li><strong>今天：</strong>注册小米 MiMo，拿到 API Key（5分钟搞定）</li>
+            <li><strong>这周：</strong>下载 Cursor 或 Trae，体验 AI 辅助编程（30分钟上手）</li>
+            <li><strong>这个月：</strong>尝试 Claude Code，用 AI 自主完成一个小项目</li>
+            <li><strong>未来：</strong>搭建 OpenClaw，让 AI 成为你的工作流核心</li>
+        </ol>
+
+        <div class="cta">
+            <h3>别停在 Level 1</h3>
+            <p>AI 不只是聊天工具。层级每上一层，你的效率就是别人的十倍。</p>
+        </div>
+
+        <h2>❓ 常见问题</h2>
+
+        <p><strong>Q：我不会翻墙，能用 Level 2/3 吗？</strong></p>
+        <p>A：可以。小米 MiMo 和 DeepSeek 都是国内直连。Cursor 的替代品 Trae 也可以国内下载。Claude Code 本身用的是 API，只要你的 API 来源能连上就行。</p>
+
+        <p><strong>Q：API Key 会不会很贵？</strong></p>
+        <p>A：MiMo 有免费额度，DeepSeek 的价格极低（几分钱一次调用）。比 ChatGPT Plus 的 $20/月便宜得多。</p>
+
+        <p><strong>Q：我完全不会编程，应该从哪开始？</strong></p>
+        <p>A：先用 Level 1 的 AI 学编程基础。让豆包/GPT 教你写 Python，边学边用。然后再往 Level 2 走。AI 本身就是最好的编程老师。</p>
+
+        <p><strong>Q：这些工具安全吗？API Key 泄露了怎么办？</strong></p>
+        <p>A：API Key 不要公开分享（不要发到朋友圈、群里）。如果不小心泄露了，去对应平台重新生成一个就行，旧的会失效。</p>
+
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Ludwig Emergence · 记录成长，分享认知</p>
+        <p style="margin-top: 0.5rem;">本文基于MEM「AI技术革命」课程内容整理，结合实操经验补充。</p>
     </div>
 </body>
 </html>
