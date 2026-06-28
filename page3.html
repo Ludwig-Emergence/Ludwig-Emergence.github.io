@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实战案例：30分钟从零到上线 | Ludwig Emergence</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            color: #1a1a2e;
+            background: #fafafa;
+        }
+        .nav {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            max-width: 780px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav a { color: #302b63; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .nav .back { color: #666; }
+        .header {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            padding: 3rem 2rem 2.5rem;
+            text-align: center;
+        }
+        .header .step-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #a8a8d8;
+            margin-bottom: 1rem;
+        }
+        .header h1 { font-size: 2rem; line-height: 1.3; max-width: 700px; margin: 0 auto; }
+        .content {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #302b63;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #302b63;
+        }
+        h3 { font-size: 1.15rem; color: #24243e; margin: 1.5rem 0 0.8rem; }
+        p { margin-bottom: 1rem; color: #333; }
+        ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; color: #444; }
+        .chat-bubble {
+            margin: 1rem 0;
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+        .chat-avatar {
+            flex-shrink: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .human .chat-avatar { background: #e8f4f8; }
+        .ai .chat-avatar { background: #f0e6ff; }
+        .chat-text {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            max-width: 85%;
+            font-size: 0.95rem;
+        }
+        .chat-text strong { color: #1a1a2e; }
+        .chat-text code {
+            background: #f0f0f0;
+            padding: 0.1rem 0.35rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+        .step-divider {
+            display: flex;
+            align-items: center;
+            margin: 2rem 0 1.5rem;
+            gap: 1rem;
+        }
+        .step-divider .line { flex: 1; height: 1px; background: #ddd; }
+        .step-divider .label {
+            font-size: 0.85rem;
+            color: #888;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .action-list {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .action-list h4 {
+            font-size: 1rem;
+            color: #302b63;
+            margin-bottom: 0.8rem;
+        }
+        .action-item {
+            display: flex;
+            gap: 0.6rem;
+            align-items: flex-start;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+        }
+        .action-item .icon { flex-shrink: 0; font-size: 1rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        th {
+            background: #302b63;
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #444;
+        }
+        tr:last-child td { border-bottom: none; }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        .info-box.success { background: #d4edda; border-left-color: #27ae60; }
+        .info-box.warn { background: #fff3cd; border-left-color: #f39c12; }
+        .info-box strong { color: #1a1a2e; }
+        .cta {
+            text-align: center;
+            padding: 2rem;
+            margin: 2rem 0;
+            background: linear-gradient(135deg, #302b63, #24243e);
+            border-radius: 12px;
+            color: #fff;
+        }
+        .cta h3 { color: #fff; margin-bottom: 0.5rem; }
+        .cta p { color: #a8a8d8; }
+        .pdf-card {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-decoration: none;
+            color: #1a1a2e;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .pdf-card:hover {
+            border-color: #302b63;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .pdf-icon {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: #e74c3c;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+        .pdf-info h4 { font-size: 1rem; margin-bottom: 0.3rem; }
+        .pdf-info p { font-size: 0.85rem; color: #666; margin: 0; }
+        .quote-box {
+            background: #f8f9fa;
+            border-left: 4px solid #6c5ce7;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: #555;
+        }
+        .quote-box .author {
+            font-style: normal;
+            font-size: 0.85rem;
+            color: #888;
+            margin-top: 0.5rem;
+        }
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+        .page-nav a { color: #302b63; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+        .page-nav a:hover { text-decoration: underline; }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-size: 0.8rem;
+            border-top: 1px solid #eee;
+            margin-top: 2rem;
+        }
+        @media (max-width: 600px) {
+            .header { padding: 2rem 1rem; }
+            .header h1 { font-size: 1.4rem; }
+            .content { padding: 1rem; }
+            h2 { font-size: 1.2rem; }
+            .chat-text { max-width: 95%; font-size: 0.88rem; padding: 0.8rem 1rem; }
+            .chat-avatar { width: 30px; height: 30px; font-size: 0.85rem; }
+            .action-list { padding: 1rem; }
+            table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            th, td { padding: 0.5rem 0.7rem; font-size: 0.78rem; white-space: nowrap; }
+            .cta { padding: 1.5rem 1rem; }
+            .pdf-card { flex-direction: column; text-align: center; gap: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-inner">
+            <a href="page2.html" class="back">← 第二步：搭建</a>
+            <a href="index.html">返回首页</a>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="step-tag">第三步 · 验证</div>
+        <h1>实战案例：30 分钟从零到上线</h1>
+    </div>
+
+    <div class="content">
+
+        <h2>🚀 一个人就是一家公司：OPC 时代</h2>
+
+        <p>在开始之前，先聊一个正在发生的趋势：<strong>OPC（One Person Company）——一人公司</strong>。</p>
+
+        <p>Anthropic（Claude 的开发公司）在 2026 年 5 月发布了一份《创始人手册：打造 AI 原生创业公司》，里面有一个核心观点：</p>
+
+        <div class="quote-box">
+            "AI 把'谁可以开公司、谁可以做产品'这件事拉回到同一条起跑线。瓶颈不再是'你能造出什么'，而是'你选择去造什么'。"
+            <div class="author">—— Anthropic《The Founder's Playbook》</div>
+        </div>
+
+        <p>过去创业需要团队：一个写代码的、一个做产品的、一个跑市场的。现在，<strong>一个人 + AI 就能覆盖所有角色</strong>。这不再是鸡汤，而是正在发生的现实。</p>
+
+        <p>OPC 的核心逻辑：</p>
+        <ul>
+            <li><strong>你负责方向和判断</strong>——做什么、为什么做、为谁做</li>
+            <li><strong>AI 负责执行</strong>——写代码、做设计、搞运营、写文档</li>
+            <li><strong>你的效率不再取决于你懂多少技能</strong>，而取决于你能不能把想法说清楚</li>
+        </ul>
+
+        <p>下面这份手册是目前关于 AI 原生创业最好的入门资料之一，推荐完整阅读：</p>
+
+        <a href="founders-playbook.pdf" target="_blank" class="pdf-card">
+            <div class="pdf-icon">PDF</div>
+            <div class="pdf-info">
+                <h4>创始人手册：打造 AI 原生创业公司</h4>
+                <p>Anthropic 中文精读版 · 基于官方手册（2026年5月）改写 · 点击打开/下载</p>
+            </div>
+        </a>
+
+        <div class="info-box">
+            <strong>💡 读完这份手册你会发现：</strong>我们接下来的实战案例，就是手册里说的"从'我有个想法'到'我有一个产品'"的完整过程——而且是一个人用 AI 完成的。
+        </div>
+
+        <h2>💬 真实对话还原</h2>
+
+        <p>下面是<strong>今天真实发生的对话</strong>。一个 MEM 研究生（非计算机背景）和 AI 协作，从零搭建了一个公开网站。整个过程没有手写一行代码。</p>
+        <p>这个网站——你现在正在看的这个——就是用这个流程做出来的。</p>
+
+        <div class="step-divider">
+            <div class="line"></div>
+            <div class="label">第 1 分钟 · 说出目标</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="chat-bubble human">
+            <div class="chat-avatar">👤</div>
+            <div class="chat-text">我想做个网页挂在公网上面，你知道怎么操作吗？</div>
+        </div>
+
+        <div class="chat-bubble ai">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-text">推荐 GitHub Pages，免费，不需要服务器。需要三样东西：网页文件 + 托管 + 域名。你有 GitHub 账号吗？</div>
+        </div>
+
+        <div class="step-divider">
+            <div class="line"></div>
+            <div class="label">第 3 分钟 · 确认方向</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="chat-bubble human">
+            <div class="chat-avatar">👤</div>
+            <div class="chat-text">没有 github 账号</div>
+        </div>
+
+        <div class="chat-bubble ai">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-text">那第一步就是注册。去 https://github.com 点 Sign up，用户名建议简短好记，因为会变成你的网址。</div>
+        </div>
+
+        <div class="step-divider">
+            <div class="line"></div>
+            <div class="label">第 5 分钟 · 要求 AI 直接操作</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="chat-bubble human">
+            <div class="chat-avatar">👤</div>
+            <div class="chat-text">你不能直接操作 github 吗？</div>
+        </div>
+
+        <div class="chat-bubble ai">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-text">可以。我帮你登录 GitHub → 创建仓库 → 上传文件 → 开启 Pages。你在浏览器里点一次授权就行。</div>
+        </div>
+
+        <div class="action-list">
+            <h4>🤖 AI 自动执行了这些操作</h4>
+            <div class="action-item"><span class="icon">→</span> <span>执行 <code>gh auth login</code>，生成授权码</span></div>
+            <div class="action-item"><span class="icon">→</span> <span>用户在浏览器点击一次"授权"</span></div>
+            <div class="action-item"><span class="icon">→</span> <span>AI 自动创建仓库 <code>Ludwig-Emergence.github.io</code></span></div>
+            <div class="action-item"><span class="icon">→</span> <span>AI 自动编写 HTML + CSS 页面</span></div>
+            <div class="action-item"><span class="icon">→</span> <span>AI 自动上传文件、开启 GitHub Pages</span></div>
+            <div class="action-item"><span class="icon">→</span> <span>等待 1 分钟部署完成</span></div>
+        </div>
+
+        <div class="info-box success">
+            <strong>✅ 结果：</strong>网站上线，地址 https://Ludwig-Emergence.github.io ，全世界任何人可以访问。<strong>用户全程只做了一件事：点了一下授权。</strong>
+        </div>
+
+        <div class="step-divider">
+            <div class="line"></div>
+            <div class="label">第 10 分钟 · 迭代内容</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="chat-bubble human">
+            <div class="chat-avatar">👤</div>
+            <div class="chat-text">写一篇科普文章，关于AI使用的四个层级，结合今天的课程内容...</div>
+        </div>
+
+        <div class="chat-bubble ai">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-text">写好了。排版完成，包含四个层级详解、对比表、手把手教程、常见问题。已发布上线。</div>
+        </div>
+
+        <div class="step-divider">
+            <div class="line"></div>
+            <div class="label">第 20 分钟 · 继续优化</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="chat-bubble human">
+            <div class="chat-avatar">👤</div>
+            <div class="chat-text">再加一个实战案例部分，把我今天的过程写进去。</div>
+        </div>
+
+        <div class="chat-bubble ai">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-text">加好了，包含对话还原、逐步拆解、复盘表格。已上线。</div>
+        </div>
+
+        <div class="step-divider">
+            <div class="line"></div>
+            <div class="label">第 25 分钟 · 手机适配</div>
+            <div class="line"></div>
+        </div>
+
+        <div class="chat-bubble human">
+            <div class="chat-avatar">👤</div>
+            <div class="chat-text">手机打开以后适配性不是很好，优化一下。</div>
+        </div>
+
+        <div class="chat-bubble ai">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-text">优化了：标题缩小、表格可横滑、代码块自动换行、间距收紧。已上线，刷新看效果。</div>
+        </div>
+
+        <h2>📊 复盘：谁做了什么？</h2>
+
+        <table>
+            <tr><th>人类做的</th><th>AI 做的</th></tr>
+            <tr><td>说"我想做个网站"</td><td>选择技术方案</td></tr>
+            <tr><td>注册 GitHub 账号</td><td>登录、创建仓库</td></tr>
+            <tr><td>浏览器点了一次授权</td><td>编写 HTML/CSS 代码</td></tr>
+            <tr><td>描述文章内容和结构</td><td>排版、上传、部署</td></tr>
+            <tr><td>说"再加个案例"</td><td>修改代码、重新发布</td></tr>
+            <tr><td>说"手机适配不好"</td><td>优化响应式布局</td></tr>
+            <tr><td><strong>总计：约 8 句话</strong></td><td><strong>总计：数百行代码 + 全套部署</strong></td></tr>
+        </table>
+
+        <h2>🔑 这就是 OPC 的工作方式</h2>
+
+        <p>回到开头的那个概念。看看这个案例里的角色分工：</p>
+
+        <div class="action-list">
+            <h4>创始人（你）做的事</h4>
+            <div class="action-item"><span class="icon">🧠</span> <span><strong>定义目标</strong>——"我要做个网站"</span></div>
+            <div class="action-item"><span class="icon">🧠</span> <span><strong>做决策</strong>——"用 GitHub Pages"、"写四个层级的内容"</span></div>
+            <div class="action-item"><span class="icon">🧠</span> <span><strong>质量把控</strong>——"手机适配不好，改一下"</span></div>
+            <div class="action-item"><span class="icon">🧠</span> <span><strong>方向判断</strong>——"加个实战案例会更好"</span></div>
+        </div>
+
+        <div class="action-list">
+            <h4>AI（你的"员工"）做的事</h4>
+            <div class="action-item"><span class="icon">⚙️</span> <span>技术选型、环境搭建</span></div>
+            <div class="action-item"><span class="icon">⚙️</span> <span>编写代码、设计排版</span></div>
+            <div class="action-item"><span class="icon">⚙️</span> <span>部署上线、域名配置</span></div>
+            <div class="action-item"><span class="icon">⚙️</span> <span>内容生成、迭代优化</span></div>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 注意到了吗？</strong>创始人从头到尾没有写一行代码、没有碰终端、没有配置服务器。但一个完整的网站从无到有上线了。<strong>这就是 OPC 的核心：你不需要什么都会，你需要知道要什么。</strong>
+        </div>
+
+        <h2>🎓 从课堂到实战</h2>
+
+        <p>今天老师布置的小组作业：以小组为团队，做一个 OPC 公司。</p>
+        <p>这是一个很好的练习。但如果你在做的过程中发现——</p>
+
+        <div class="quote-box">
+            "等一下，我好像真的有一个想法，我想试试看能不能做出来。"
+        </div>
+
+        <p>那就不只是作业了。</p>
+
+        <p><strong>如果你有真正想做的想法，想从"课堂作业"走到"实战验证"，可以单独联系我。</strong></p>
+        <p>我们可以一起：</p>
+        <ul>
+            <li>用 AI 把你的想法快速做成可展示的原型</li>
+            <li>验证你的想法是否值得继续投入</li>
+            <li>走一遍从 Idea → MVP 的完整流程</li>
+        </ul>
+
+        <p>不需要你会写代码。你只需要有<strong>一个值得验证的想法</strong>，和<strong>愿意花时间去验证它的决心</strong>。</p>
+
+        <div class="cta">
+            <h3>从"会用AI"到"让AI帮你创业"</h3>
+            <p>区别只在于：你有没有一个值得做的想法。<br>有的话，来找我。</p>
+        </div>
+
+        <div class="page-nav">
+            <a href="page2.html">← 第二步：搭建</a>
+            <a href="index.html">返回首页</a>
+        </div>
+    </div>
+
+    <div class="footer">© 2026 Ludwig Emergence</div>
+</body>
+</html>
