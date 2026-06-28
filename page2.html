@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动手搭建：获取你的AI能力 | Ludwig Emergence</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            line-height: 1.8;
+            color: #1a1a2e;
+            background: #fafafa;
+        }
+        .nav {
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            max-width: 780px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav a { color: #302b63; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .nav .back { color: #666; }
+        .nav .next { color: #3498db; }
+        .header {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            padding: 3rem 2rem 2.5rem;
+            text-align: center;
+        }
+        .header .step-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #a8a8d8;
+            margin-bottom: 1rem;
+        }
+        .header h1 { font-size: 2rem; line-height: 1.3; max-width: 700px; margin: 0 auto; }
+        .content {
+            max-width: 780px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h2 {
+            font-size: 1.5rem;
+            color: #302b63;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #302b63;
+        }
+        h3 { font-size: 1.15rem; color: #24243e; margin: 1.5rem 0 0.8rem; }
+        p { margin-bottom: 1rem; color: #333; }
+        ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
+        li { margin-bottom: 0.5rem; color: #444; }
+        .code-block {
+            background: #1a1a2e;
+            color: #eee;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-family: "SF Mono", "Fira Code", monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .code-block .comment { color: #666; }
+        .code-block .cmd { color: #7bed9f; }
+        .code-block .output { color: #f39c12; }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 1rem 1.5rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1.5rem 0;
+        }
+        .info-box.warn { background: #fff3cd; border-left-color: #f39c12; }
+        .info-box.success { background: #d4edda; border-left-color: #27ae60; }
+        .info-box strong { color: #1a1a2e; }
+        .step-box {
+            background: #fff;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid #3498db;
+        }
+        .step-box .step-num {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+        .step-box h4 {
+            display: inline;
+            font-size: 1.05rem;
+            color: #1a1a2e;
+        }
+        .step-box p, .step-box ul { margin-top: 0.8rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        th {
+            background: #302b63;
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+        td {
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+            color: #444;
+        }
+        tr:last-child td { border-bottom: none; }
+        .prompt-box {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .prompt-box .label {
+            font-size: 0.75rem;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .prompt-box code {
+            background: #e8e8e8;
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.85rem;
+        }
+        .screenshot-placeholder {
+            background: #f0f0f0;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #999;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #eee;
+        }
+        .page-nav a { color: #302b63; text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+        .page-nav a:hover { text-decoration: underline; }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            font-size: 0.8rem;
+            border-top: 1px solid #eee;
+            margin-top: 2rem;
+        }
+        @media (max-width: 600px) {
+            .header { padding: 2rem 1rem; }
+            .header h1 { font-size: 1.4rem; }
+            .content { padding: 1rem; }
+            h2 { font-size: 1.2rem; }
+            .step-box { padding: 1rem; }
+            .code-block { padding: 0.8rem 1rem; font-size: 0.75rem; }
+            .info-box { padding: 0.8rem 1rem; font-size: 0.88rem; }
+            table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            th, td { padding: 0.5rem 0.7rem; font-size: 0.78rem; white-space: nowrap; }
+            .prompt-box { padding: 0.8rem 1rem; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <div class="nav-inner">
+            <a href="page1.html" class="back">← 第一步：认知</a>
+            <a href="page3.html" class="next">第三步：实战 →</a>
+        </div>
+    </div>
+
+    <div class="header">
+        <div class="step-tag">第二步 · 行动</div>
+        <h1>动手搭建：获取你的 AI 能力</h1>
+    </div>
+
+    <div class="content">
+        <p>认知到位了，现在动手。这一章带你完成<strong>最关键的一步</strong>：拿到 API Key，让 AI 从"聊天工具"变成"你的工作引擎"。</p>
+
+        <h2>🔑 第一站：申请 MiMo API Key</h2>
+
+        <p><strong>为什么推荐小米 MiMo？</strong></p>
+        <ul>
+            <li><strong>国内直连</strong>——不需要翻墙，注册就能用</li>
+            <li><strong>中文能力最强</strong>——小米自研，中文理解一流</li>
+            <li><strong>兼容 OpenAI 格式</strong>——几乎所有工具都能直接接入</li>
+            <li><strong>有免费额度</strong>——先体验，不花钱</li>
+        </ul>
+
+        <div class="step-box">
+            <span class="step-num">1</span>
+            <h4>打开 MiMo 开发者平台</h4>
+            <p>访问 <strong>https://mimo.mi.com</strong>，你会看到如下界面：</p>
+            <p style="text-align:center;margin:1rem 0"><img src="mimo-home.png" alt="MiMo 首页" style="max-width:100%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)"></p>
+            <p>点击右上角 <strong>「控制台」</strong> 进入登录页面。用小米账号登录，没有小米账号的用手机号注册一个，2分钟搞定。</p>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">2</span>
+            <h4>充值余额</h4>
+            <p>MiMo <strong>没有免费额度</strong>，需要先充值才能使用。但价格非常便宜：</p>
+            <table>
+                <tr><th>模型</th><th>输入价格</th><th>输出价格</th></tr>
+                <tr><td><strong>MiMo-V2.5</strong>（推荐）</td><td>¥1 / 百万Token</td><td>¥2 / 百万Token</td></tr>
+                <tr><td><strong>MiMo-V2.5-Pro</strong></td><td>¥3 / 百万Token</td><td>¥6 / 百万Token</td></tr>
+            </table>
+            <p><strong>建议先充 ¥30</strong>，够你用很久。一次普通对话大约消耗几千 Token，30 块钱可以对话上万次。</p>
+            <p>在控制台 → <strong>「费用中心」</strong> → <strong>「充值」</strong>，支持支付宝。</p>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">3</span>
+            <h4>创建 API Key</h4>
+            <p>登录后，在控制台找到 <strong>「API Key 管理」</strong> → <strong>「创建 API Key」</strong></p>
+            <p>系统会生成一串以 <code>sk-</code> 开头的密钥。<strong>立刻复制保存</strong>，这个 Key 只显示一次。</p>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 花费预估：</strong>MiMo-V2.5 的价格是 ¥1/百万输入Token、¥2/百万输出Token。一次普通对话大约几千 Token，¥30 足够你体验上千次对话。不用担心一下花完。
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">4</span>
+            <h4>选择你的模型</h4>
+            <p>MiMo 提供多个模型，新手推荐 <strong>MiMo-V2.5</strong>（标准版），性价比最高。</p>
+        </div>
+
+        <h2>🛠️ 第二站：配置你的 AI 工具</h2>
+
+        <p>拿到 API Key 后，接下来把它接入一个工具，让 AI 真正为你工作。</p>
+
+        <h3>方案 A：Cursor（最容易上手的 AI 编程 IDE）</h3>
+
+        <div class="step-box">
+            <span class="step-num">1</span>
+            <h4>下载安装 Cursor</h4>
+            <p>访问 <strong>https://cursor.sh</strong> 下载安装。它长得像 VS Code，因为就是基于 VS Code 改的。</p>
+            <div class="info-box warn">
+                <strong>⚠️ 需要翻墙下载。</strong>如果暂时不会翻墙，用方案 B（Trae）。
+            </div>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">2</span>
+            <h4>配置 API Key</h4>
+            <p>打开 Cursor → <code>Ctrl+,</code>（或 Cmd+,）打开设置 → 搜索 <strong>OpenAI API Key</strong> → 粘贴你的 MiMo Key</p>
+            <p>在 <strong>Base URL</strong> 填入：<code>https://api.xiaomimimo.com/v1</code></p>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">3</span>
+            <h4>开始使用</h4>
+            <p>打开任意文件，按 <code>Ctrl+K</code>，输入你想要的效果，AI 会自动写代码。</p>
+            <div class="prompt-box">
+                <div class="label">💡 试试这个提示词</div>
+                <p>帮我写一个 Python 脚本，读取当前目录下所有 CSV 文件，合并成一个 Excel 文件，第一列为文件名来源</p>
+            </div>
+        </div>
+
+        <h3>方案 B：Trae（国内可下载，无需翻墙）</h3>
+
+        <div class="step-box">
+            <span class="step-num">1</span>
+            <h4>下载 Trae</h4>
+            <p>访问 <strong>https://trae.ai</strong>（字节跳动出品），国内直接下载。安装后打开，<strong>自带 7 天免费体验额度</strong>，不需要配置任何 API Key 就能直接用。</p>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">2</span>
+            <h4>免费额度用完后，接入 MiMo</h4>
+            <p>7 天免费额度体验完后，如果想继续用，可以把 MiMo 接进去。</p>
+            <p>设置 → 模型管理 → 添加自定义模型。</p>
+
+            <div class="info-box warn">
+                <strong>⚠️ MiMo 有两种 Key，别选错了：</strong><br><br>
+                <table style="margin:0.5rem 0">
+                    <tr><th>类型</th><th>前缀</th><th>来源</th><th>用在哪</th></tr>
+                    <tr><td><strong>API Key</strong></td><td><code>sk-</code></td><td>控制台 → API Key 管理</td><td>按量付费（充多少用多少）</td></tr>
+                    <tr><td><strong>Token Plan Key</strong></td><td><code>tp-</code></td><td>控制台 → Token Plan</td><td>订阅套餐（包月/包年）</td></tr>
+                </table>
+                <p style="margin-top:0.5rem">在 Trae 里：<br>
+                • 如果选了 <strong>mimo-plan</strong>，必须填 <code>tp-</code> 开头的 Key<br>
+                • 如果选 <strong>通用 OpenAI 兼容</strong>，填 <code>sk-</code> 开头的 Key，API 地址填 <code>https://api.xiaomimimo.com/v1</code></p>
+            </div>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">3</span>
+            <h4>开始使用</h4>
+            <p>打开任意文件，直接用自然语言告诉 Trae 你想要什么效果，AI 会自动写代码。</p>
+            <div class="prompt-box">
+                <div class="label">💡 试试这个提示词</div>
+                <p>帮我写一个 Python 脚本，读取当前目录下所有 CSV 文件，合并成一个 Excel 文件，第一列为文件名来源</p>
+            </div>
+        </div>
+
+        <h2>💻 插播：什么是终端？5分钟入门</h2>
+
+        <p>接下来的方案 C 和 D 都需要用到"终端"。如果你从没用过，花 5 分钟学一下，不难。<strong>如果你只打算用方案 A 或 B，可以跳过这一节。</strong></p>
+
+        <p>终端（Terminal）就是一个<strong>用文字操作电脑的窗口</strong>。你平时用鼠标点来点去，终端是用打字来操作。听起来吓人，其实就几个命令。</p>
+
+        <h3>第一步：打开终端</h3>
+
+        <div class="step-box">
+            <span class="step-num">1</span>
+            <h4>Mac 用户</h4>
+            <p>按 <code>Command + 空格</code>，输入 <code>Terminal</code>（或"终端"），回车。会弹出一个黑底白字的窗口。</p>
+        </div>
+
+        <div class="step-box">
+            <span class="step-num">2</span>
+            <h4>Windows 用户</h4>
+            <p>按 <code>Win + R</code>，输入 <code>cmd</code>，回车。或者在开始菜单搜索"命令提示符"。</p>
+        </div>
+
+
+        <h3>第二步：认识终端界面</h3>
+
+        <p>打开后你会看到类似这样的一行字：</p>
+
+        <div class="code-block"><span class="output">用户名@电脑名 ~ %</span> <span class="comment">← 这叫"提示符"，意思是"我准备好了，请输入命令"</span></div>
+
+        <p>你只需要在光标闪烁的地方<strong>打字</strong>，然后按<strong>回车</strong>执行。</p>
+
+        <h3>第三步：记住这 5 个命令就够了</h3>
+
+        <table>
+            <tr><th>命令</th><th>作用</th><th>类比</th></tr>
+            <tr><td><code>pwd</code></td><td>显示你当前在哪个文件夹</td><td>看地图定位</td></tr>
+            <tr><td><code>ls</code></td><td>列出当前文件夹里的文件</td><td>打开文件柜看里面有什么</td></tr>
+            <tr><td><code>cd 文件夹名</code></td><td>进入某个文件夹</td><td>走进一个房间</td></tr>
+            <tr><td><code>cd ..</code></td><td>返回上一级文件夹</td><td>退出房间</td></tr>
+            <tr><td><code>clear</code></td><td>清空屏幕</td><td>擦黑板</td></tr>
+        </table>
+
+        <div class="info-box">
+            <strong>💡 试试看：</strong>打开终端，输入 <code>pwd</code> 然后回车。会显示你当前的位置，类似 <code>/Users/你的名字</code>。这就是你的"家目录"。
+        </div>
+
+        <h3>第四步：理解"复制粘贴"的区别</h3>
+
+        <p>终端里的复制粘贴快捷键<strong>和平时不一样</strong>：</p>
+
+        <table>
+            <tr><th>操作</th><th>Mac</th><th>Windows</th></tr>
+            <tr><td>复制</td><td><code>Command + C</code></td><td><code>Ctrl + C</code>（但这个是取消！右键复制）</td></tr>
+            <tr><td>粘贴</td><td><code>Command + V</code></td><td><code>Ctrl + V</code> 或<strong>右键 → 粘贴</strong></td></tr>
+        </table>
+
+        <div class="info-box warn">
+            <strong>⚠️ Windows 用户注意：</strong><code>Ctrl+C</code> 在终端里是<strong>取消/中断</strong>命令，不是复制。要复制文字，选中后<strong>右键 → 复制</strong>。
+        </div>
+
+        <h3>第五步：什么是"安装"软件？</h3>
+
+        <p>终端里安装软件，就是输入一行命令，电脑自动帮你下载和配置。比如：</p>
+
+        <div class="code-block"><span class="comment"># 这行命令的意思是：用 npm（Node.js 的工具）安装 claude-code 这个软件</span>
+<span class="cmd">npm install -g @anthropic-ai/claude-code</span></div>
+
+        <p>你不需要理解每个词的意思。<strong>复制这行命令，粘贴到终端，回车</strong>，等它跑完就行。</p>
+
+        <div class="info-box">
+            <strong>💡 看到一堆文字在滚动？</strong>正常的，那是电脑在告诉你它在干什么。等到又出现提示符（<code>用户名@电脑名 ~ %</code>），说明执行完了。
+        </div>
+
+        <h2>📚 方案 C：了解 Claude Code 与 Codex（Level 3）</h2>
+
+        <div class="info-box warn">
+            <strong>⚠️ 国内用户请注意：Claude Code 和 Codex 在国内基本无法使用。</strong><br><br>
+            原因：<br>
+            • <strong>注册需要海外手机号</strong>——国内手机号无法注册 Anthropic（Claude）和 OpenAI（Codex）账号<br>
+            • <strong>支付需要海外信用卡</strong>——不支持支付宝、微信支付，需要 Visa/Mastercard 外币卡<br>
+            • <strong>API 调用需要翻墙</strong>——即使有了账号，直连也会被拦截<br><br>
+            <strong>本节仅作科普了解，可以跳过。</strong>如果你有海外手机号和外币卡，才需要看下面的内容。
+        </div>
+
+        <p>Claude Code 和 Codex 是目前最强的 AI 编程代理（Level 3 工具），了解一下它们的能力边界是有价值的：</p>
+
+        <div class="step-box">
+            <h4>Claude Code（Anthropic）</h4>
+            <p>在终端里运行的 AI 编程代理。你给它一个目标，它自己读代码、改代码、运行测试、修复错误。<strong>编程能力公认最强</strong>，但月费 $20 起 + 需要翻墙。</p>
+            <p>安装方法（需要先装 Node.js → <strong>https://nodejs.org</strong>）：</p>
+            <div class="code-block"><span class="comment"># 安装</span>
+<span class="cmd">npm install -g @anthropic-ai/claude-code</span>
+
+<span class="comment"># 设置 Key 并启动</span>
+<span class="cmd">export ANTHROPIC_API_KEY=你的Key</span>
+<span class="cmd">claude</span></div>
+            <div class="info-box warn">
+                <strong>⚠️ 实测发现：Claude Code 无法直接接入 MiMo。</strong>虽然 MiMo API 兼容 Anthropic 协议格式，但 Claude Code 内部硬编码了 Claude 模型名，不接受 MiMo 的模型名。想用 Level 3 工具，推荐下面的 MiMo Code。
+            </div>
+        </div>
+
+        <div class="step-box">
+            <h4>Codex（OpenAI）</h4>
+            <p>OpenAI 的编程代理，目前更偏向云端运行，需要 ChatGPT Pro 订阅（$200/月）。门槛更高。</p>
+        </div>
+
+        <div class="info-box success">
+            <strong>✅ 国内 Level 3 首选：MiMo Code</strong><br><br>
+            MiMo Code 是小米出品的 AI 编程代理，国内直连，一行命令安装，有免费模式：<br><br>
+            <div class="code-block"><span class="comment"># 一键安装</span>
+<span class="cmd">curl -fsSL https://mimo.xiaomi.com/install | bash</span>
+
+<span class="comment"># 验证</span>
+<span class="cmd">mimo --version</span>
+
+<span class="comment"># 启动（默认免费模式，不需要 Key）</span>
+<span class="cmd">mimo</span></div>
+            <p style="margin-top:0.5rem">• <strong>MiMo Auto（免费）</strong>：默认模式，限免使用 MiMo-V2.5，无需登录<br>
+            • <strong>Token Plan</strong>：订阅用户，用 <code>tp-</code> Key 登录<br>
+            • <strong>API 模式</strong>：按量付费，用 <code>sk-</code> Key 登录</p>
+        </div>
+
+        <h2>🔒 方案 D：OpenClaw（Level 4，进阶用户）</h2>
+
+        <div class="info-box warn">
+            <strong>⚠️ OpenClaw 门槛较低，但有重大隐私风险，请认真阅读后再决定是否使用。</strong>
+        </div>
+
+        <p>OpenClaw 是一个开源的 AI 工作流平台，能把 AI 变成一个有记忆、能操作各种工具的"AI 员工"。它的安装比 Claude Code 简单，<strong>但隐私风险也更大</strong>。</p>
+
+        <h4>为什么说门槛低？</h4>
+        <ul>
+            <li>开源免费，<code>npm install -g openclaw</code> 一行命令安装</li>
+            <li>支持接入国内模型（MiMo、DeepSeek），不需要翻墙</li>
+            <li>配置简单，有引导流程</li>
+        </ul>
+
+        <h4>⚠️ 隐私风险——这才是重点</h4>
+
+        <p>OpenClaw 不是普通聊天工具，它是一个<strong>深度介入你数字生活的平台</strong>。一旦接入，它可能拥有以下权限：</p>
+
+        <table>
+            <tr><th>能力</th><th>意味着什么</th><th>风险等级</th></tr>
+            <tr><td>读写你的文件</td><td>能看到你的文档、代码、笔记</td><td>🔴 高</td></tr>
+            <tr><td>接入微信/飞书</td><td>能读取你的聊天记录、联系人</td><td>🔴 高</td></tr>
+            <tr><td>操作浏览器</td><td>能访问你登录过的网站</td><td>🔴 高</td></tr>
+            <tr><td>管理日程/邮件</td><td>能看到你的日程和邮件内容</td><td>🟡 中</td></tr>
+            <tr><td>调用外部 API</td><td>能以你的名义发送请求</td><td>🟡 中</td></tr>
+            <tr><td>持久记忆</td><td>你之前说过的所有内容都会被记住</td><td>🟡 中</td></tr>
+        </table>
+
+        <div class="info-box warn">
+            <strong>🔴 核心风险：</strong><br>
+            • <strong>API Key 泄露</strong>——如果配置不当，你的 Key 可能被第三方获取<br>
+            • <strong>数据外传</strong>——AI 的对话内容会发送到模型提供商的服务器（国外模型发到海外）<br>
+            • <strong>过度授权</strong>——一旦给了文件/消息权限，AI 能看到的东西远超你的想象<br>
+            • <strong>提示词注入</strong>——恶意内容可能通过 AI 操控你的系统<br><br>
+            <strong>建议：</strong>不要在存有敏感数据（银行信息、身份证、公司机密）的电脑上使用。如果要用，建议在独立的虚拟机或专用电脑上运行。
+        </div>
+
+        <h4>如果决定尝试</h4>
+
+        <div class="code-block"><span class="comment"># 安装</span>
+<span class="cmd">npm install -g openclaw</span>
+
+<span class="comment"># 初始化（会引导你配置模型和 API Key）</span>
+<span class="cmd">openclaw init</span>
+
+<span class="comment"># 启动</span>
+<span class="cmd">openclaw start</span></div>
+
+        <p>官方文档：<strong>https://docs.openclaw.ai</strong></p>
+
+        <h2>📋 总结：你的行动清单</h2>
+
+        <p><strong>新手推荐路径（不需要翻墙，不需要终端）：</strong></p>
+
+        <table>
+            <tr><th>步骤</th><th>做什么</th><th>耗时</th><th>需要翻墙？</th></tr>
+            <tr><td>①</td><td>注册小米账号 → 登录 MiMo 控制台</td><td>5 分钟</td><td>❌ 不需要</td></tr>
+            <tr><td>②</td><td>充值 ¥30（支付宝）</td><td>2 分钟</td><td>❌ 不需要</td></tr>
+            <tr><td>③</td><td>创建 API Key → 复制保存</td><td>1 分钟</td><td>❌ 不需要</td></tr>
+            <tr><td>④</td><td>下载 Trae，配置 API Key</td><td>5 分钟</td><td>❌ 不需要</td></tr>
+            <tr><td>⑤</td><td>写第一个提示词，让 AI 帮你干活</td><td>2 分钟</td><td>❌ 不需要</td></tr>
+        </table>
+
+        <div class="info-box success">
+            <strong>✅ 总计约 15 分钟 + ¥30</strong>，你就能从 Level 1 跨到 Level 2。不需要学编程，先动手试试。
+        </div>
+
+        <p style="margin-top:1.5rem"><strong>各方案适用人群：</strong></p>
+
+        <table>
+            <tr><th>方案</th><th>适合谁</th><th>国内可用？</th><th>推荐度</th></tr>
+            <tr><td><strong>A. Trae</strong></td><td>所有新手（自带7天免费）</td><td>✅ 完全可用</td><td>⭐⭐⭐⭐⭐</td></tr>
+            <tr><td><strong>B. Cursor</strong></td><td>会翻墙的用户</td><td>⚠️ 需翻墙下载</td><td>⭐⭐⭐⭐</td></tr>
+            <tr><td><strong>C. MiMo Code</strong></td><td>想体验 Agent 的用户</td><td>✅ 国内直连，有免费模式</td><td>⭐⭐⭐⭐⭐</td></tr>
+            <tr><td><strong>C2. Claude Code</strong></td><td>科普了解即可</td><td>❌ 无法接入 MiMo</td><td>了解就好</td></tr>
+            <tr><td><strong>D. OpenClaw</strong></td><td>进阶用户（注意隐私）</td><td>✅ 可用</td><td>⭐⭐⭐（有风险）</td></tr>
+        </table>
+
+        <div class="page-nav">
+            <a href="page1.html">← 第一步：认知</a>
+            <a href="page3.html">第三步：实战案例 →</a>
+        </div>
+    </div>
+
+    <div class="footer">© 2026 Ludwig Emergence</div>
+</body>
+</html>
