@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>经验分享：用AI达成工作目标 | Ludwig Emergence</title>
+    <title>经验分享：重复劳动变技能包 | Ludwig Emergence</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -28,7 +28,6 @@
             align-items: center;
         }
         .nav a { color: #302b63; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
-        .nav .back { color: #666; }
         .header {
             background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
             color: #fff;
@@ -63,7 +62,6 @@
         ul, ol { margin: 0.5rem 0 1.5rem 1.5rem; }
         li { margin-bottom: 0.5rem; color: #444; }
 
-        /* 分享结构模块 */
         .share-section {
             background: #fff;
             border-radius: 16px;
@@ -92,9 +90,104 @@
             flex-shrink: 0;
         }
 
-        /* 招式卡 */
+        /* Timeline */
+        .timeline {
+            position: relative;
+            margin: 1.5rem 0;
+            padding-left: 2rem;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #302b63;
+            opacity: 0.3;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .timeline-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.5rem;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #302b63;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #302b63;
+        }
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #888;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        .timeline-title {
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 0.3rem;
+        }
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        /* Code block */
+        .code-block {
+            background: #1a1a2e;
+            color: #e0e0e0;
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+            font-family: "SF Mono", "Fira Code", monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+        .code-block .comment { color: #666; }
+        .code-block .dir { color: #3498db; }
+        .code-block .file { color: #a8a8d8; }
+
+        /* Stat */
+        .stat-row {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        .stat-item {
+            flex: 1;
+            min-width: 120px;
+            background: #f8f9ff;
+            border: 1px solid #e0e0f0;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+        }
+        .stat-num {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #302b63;
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        /* Technique card */
         .technique-card {
-            background: linear-gradient(135deg, #f8f9ff, #eef0ff);
+            background: linear-gradient(135deg, #f8f9ff, #eeefff);
             border: 2px solid #302b63;
             border-radius: 16px;
             padding: 2rem;
@@ -121,16 +214,8 @@
             margin-bottom: 1.5rem;
             text-align: center;
         }
-        .card-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.2rem;
-        }
-        .card-item {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
+        .card-grid { display: grid; grid-template-columns: 1fr; gap: 1.2rem; }
+        .card-item { display: flex; gap: 1rem; align-items: flex-start; }
         .card-label {
             flex-shrink: 0;
             width: 90px;
@@ -139,36 +224,10 @@
             font-size: 0.9rem;
             padding-top: 0.15rem;
         }
-        .card-value {
-            flex: 1;
-            color: #444;
-            font-size: 0.95rem;
-        }
-        .card-divider {
-            height: 1px;
-            background: rgba(48, 43, 99, 0.15);
-            margin: 0.5rem 0;
-        }
+        .card-value { flex: 1; color: #444; font-size: 0.95rem; }
+        .card-divider { height: 1px; background: rgba(48, 43, 99, 0.15); margin: 0.5rem 0; }
 
-        /* 演示区域 */
-        .demo-area {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: center;
-        }
-        .demo-area .placeholder {
-            background: #f0f0f0;
-            border: 2px dashed #ccc;
-            border-radius: 8px;
-            padding: 3rem 2rem;
-            color: #999;
-            font-size: 0.9rem;
-        }
-
-        /* 使用指南 */
+        /* How to use */
         .how-to-use {
             background: #fff;
             border-radius: 12px;
@@ -176,34 +235,16 @@
             margin: 1.5rem 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
-        .how-to-use h4 {
-            font-size: 1rem;
-            color: #302b63;
-            margin-bottom: 0.8rem;
-        }
-        .use-step {
-            display: flex;
-            gap: 0.8rem;
-            align-items: flex-start;
-            margin-bottom: 0.8rem;
+        .how-to-use h4 { font-size: 1rem; color: #302b63; margin-bottom: 0.8rem; }
+        .use-category {
+            margin-bottom: 1rem;
             padding: 0.8rem;
             background: #f8f9fa;
             border-radius: 8px;
+            border-left: 3px solid #302b63;
         }
-        .use-step .step-num-sm {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #3498db;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-        .use-step p { margin: 0; font-size: 0.9rem; color: #444; }
+        .use-category strong { color: #302b63; }
+        .use-category p { margin: 0.3rem 0 0; font-size: 0.9rem; color: #555; }
 
         /* Info box */
         .info-box {
@@ -228,7 +269,7 @@
             color: #555;
         }
 
-        /* 表格 */
+        /* Version table */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -252,6 +293,16 @@
             color: #444;
         }
         tr:last-child td { border-bottom: none; }
+        .ver-tag {
+            display: inline-block;
+            background: #302b63;
+            color: #fff;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .ver-tag.active { background: #27ae60; }
 
         /* CTA */
         .cta {
@@ -265,7 +316,6 @@
         .cta h3 { color: #fff; margin-bottom: 0.5rem; }
         .cta p { color: #a8a8d8; }
 
-        /* Page nav */
         .page-nav {
             display: flex;
             justify-content: space-between;
@@ -293,7 +343,9 @@
             .technique-card::before { font-size: 0.65rem; right: -32px; top: 10px; }
             .card-item { flex-direction: column; gap: 0.3rem; }
             .card-label { width: auto; }
-            .use-step { flex-direction: column; gap: 0.5rem; }
+            .stat-row { flex-direction: column; }
+            .stat-item { min-width: auto; }
+            .timeline { padding-left: 1.5rem; }
             table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
             th, td { padding: 0.5rem 0.7rem; font-size: 0.78rem; white-space: nowrap; }
         }
@@ -302,167 +354,210 @@
 <body>
     <div class="nav">
         <div class="nav-inner">
-            <a href="page3.html" class="back">← 第三步：实战</a>
+            <a href="page3.html">← 第三步：实战</a>
             <a href="index.html">返回首页</a>
         </div>
     </div>
 
     <div class="header">
         <div class="step-tag">经验分享</div>
-        <h1>用 AI 达成工作目标：我的一招</h1>
-        <p>每人一招，全班带走一套</p>
+        <h1>🥊 重复劳动变技能包</h1>
+        <p>AI 的记忆会丢，但 skill 文件不会</p>
     </div>
 
     <div class="content">
 
-        <!-- ========== 第一部分：我干成了啥 ========== -->
+        <!-- ========== 1. 我干成了啥 ========== -->
         <div class="share-section">
             <h3><span class="num">1</span> 我干成了啥</h3>
-            <p>在小米汽车负责 NPS（净推荐值）研究和满意度管理。传统做法是：手动设计问卷 → 发放 → 回收 → 用 Excel 做数据分析 → 写报告。一轮完整的 NPS 调研周期通常需要 <strong>2-3 周</strong>。</p>
-            <p>我用 AI 工具（OpenClaw + DeepSeek）搭建了一套自动化工作流，把同样的流程压缩到了 <strong>2-3 天</strong>，而且分析维度更细、报告质量更高。</p>
+            <p>在小米汽车做 NPS（净推荐值）数据分析。一开始，每次拿到调研数据都要从零开始——重新理解需求、重新写脚本、重新调格式。AI 每次换一个对话就全忘了。</p>
+            <p>两个月后，我们把所有重复性工作打包成了<strong>可复用的 skill 系统</strong>：</p>
 
-            <table>
-                <tr><th>指标</th><th>之前（手动）</th><th>之后（AI 辅助）</th><th>提升</th></tr>
-                <tr><td>问卷设计周期</td><td>2-3 天</td><td>30 分钟</td><td>🚀 10x+</td></tr>
-                <tr><td>数据分析时间</td><td>3-5 天</td><td>半天</td><td>📈 6x</td></tr>
-                <tr><td>报告产出</td><td>2-3 天</td><td>2 小时</td><td>📈 8x</td></tr>
-                <tr><td>总周期</td><td>2-3 周</td><td>2-3 天</td><td>📈 5x</td></tr>
-            </table>
+            <div class="stat-row">
+                <div class="stat-item">
+                    <div class="stat-num">5,377</div>
+                    <div class="stat-label">行 Python 代码</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">15+</div>
+                    <div class="stat-label">独立可运行脚本</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">4</div>
+                    <div class="stat-label">功能模块</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-num">583</div>
+                    <div class="stat-label">行 SKILL.md</div>
+                </div>
+            </div>
+
+            <p>现在 AI 接到 NPS 数据分析任务，不需要重新理解需求，直接调用对应的 skill 就能跑。</p>
         </div>
 
-        <!-- ========== 第二部分：关键那一招 ========== -->
+        <!-- ========== 2. 关键那一招 ========== -->
         <div class="share-section">
             <h3><span class="num">2</span> 关键那一招</h3>
-            <p><strong>不是让 AI 帮你"做一件事"，而是让 AI 帮你"跑一条流水线"。</strong></p>
-            <p>大多数人用 AI 的方式是：遇到一个问题 → 问 AI → 得到回答 → 复制粘贴。这相当于把 AI 当搜索引擎用。</p>
-            <p>我的做法是：<strong>把整个工作流程拆成步骤，每一步的输出变成下一步的输入，让 AI 串起来自动跑。</strong></p>
+            <p><strong>别急着抽象。先在真实任务里反复跑，攒够"手感"，再打包成技能包。</strong></p>
+            <p>很多人一上来就想让 AI "记住"怎么做某件事。但 AI 的上下文窗口有限，换个对话就全忘了。真正的解法不是让 AI 记住，而是<strong>把经验固化成文件</strong>。</p>
 
             <div class="info-box">
-                <strong>💡 核心思路：</strong>不要问 AI "帮我分析这份数据"，而是告诉 AI "你是我的数据分析师，接下来我会给你原始数据，你先做清洗，再做交叉分析，然后生成可视化图表，最后写一份给管理层看的报告。"
+                <strong>💡 核心逻辑：</strong>先用实战攒经验 → 再用脚本锁流程 → 最后用版本迭代打磨到丝滑。任何你做了 3 次以上的事，第 4 次就该变成 skill。
             </div>
 
-            <p>区别在于：</p>
-            <ul>
-                <li><strong>单次提问</strong> = 让 AI 做一道题</li>
-                <li><strong>流水线</strong> = 让 AI 当一个岗位</li>
-            </ul>
-            <p>当你把 AI 当成"员工"而不是"工具"，效率才会真正起飞。</p>
+            <h3>三步走</h3>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">第一步 · 4月中旬</div>
+                    <div class="timeline-title">实战跑通，攒够"手感"</div>
+                    <div class="timeline-desc">
+                        别急着抽象。先在真实任务里反复跑几轮，搞清楚哪些步骤是固定的、哪些会变、哪些坑只有踩过才知道。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">第二步 · 5月18日</div>
+                    <div class="timeline-title">打包成"可复用脚本库"</div>
+                    <div class="timeline-desc">
+                        当同一类任务做了 3 次以上，把核心逻辑抽出来写成脚本，按功能模块组织目录。
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">第三步 · 持续迭代</div>
+                    <div class="timeline-title">用"版本迭代"打磨到定稿</div>
+                    <div class="timeline-desc">
+                        技能包不是一次写好的。在真实使用中反复调优，记录每一个"坑"和"确认的规则"，直到格式锁死。
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- ========== 第三部分：演示/截图 ========== -->
+        <!-- ========== 3. 演示 ========== -->
         <div class="share-section">
-            <h3><span class="num">3</span> 演示 / 截图</h3>
-            <p>以下是实际工作中的一个案例：用 AI 自动生成 NPS 分析报告的核心流程。</p>
+            <h3><span class="num">3</span> 演示 / 真实案例</h3>
 
-            <h3>Step 1：给 AI 原始数据 + 角色定义</h3>
-            <div class="demo-area">
-                <div class="placeholder">
-                    📸 截图位置 1：对话截图 —— 给 AI 发送原始 NPS 数据 + 角色提示词<br>
-                    <small>（建议放一张实际的对话截图，展示你是怎么给 AI 下达任务的）</small>
-                </div>
-            </div>
-
-            <h3>Step 2：AI 自动完成分析</h3>
-            <div class="demo-area">
-                <div class="placeholder">
-                    📸 截图位置 2：AI 输出的分析结果截图<br>
-                    <small>（展示 AI 做的交叉分析、趋势对比、关键发现等）</small>
-                </div>
-            </div>
-
-            <h3>Step 3：AI 生成最终报告</h3>
-            <div class="demo-area">
-                <div class="placeholder">
-                    📸 截图位置 3：最终报告截图<br>
-                    <small>（展示 AI 生成的结构化报告，包含图表和管理层建议）</small>
-                </div>
-            </div>
-
+            <h3>Step 1：从"每次都翻车"开始</h3>
+            <p>4月15日，Lu 给了我一份 <strong>62MB 的年调 rawdata PDF</strong>。我连图表数据都提取不出来。</p>
             <div class="info-box warn">
-                <strong>📝 提示：</strong>把上面的占位区域替换成你的真实截图。截图越具体，听众越容易模仿。建议用对话截图而不是总结性描述。
+                <strong>😅 第一次尝试：</strong>直接用常规方法解析 PDF → 图表数据全部丢失，提取失败。
             </div>
-        </div>
+            <p>第二天换了 PyMuPDF + 图像识别才搞定。之后两周密集实战——4维深度分析、车身稳定性专项、因子挖掘、品牌契合度分析……每次都是从头写代码、从头查字段映射、从头调格式。</p>
 
-        <!-- ========== 第四部分：你们怎么用上 ========== -->
-        <div class="share-section">
-            <h3><span class="num">4</span> 你们怎么用上</h3>
-            <p>这一招不只适用于 NPS 分析。任何需要"数据进 → 报告出"的工作场景都能用：</p>
+            <h3>Step 2：打包成 nps-data skill</h3>
+            <p>5月18日，Lu 说："把所有 NPS 数据处理能力整理成 skill。"我回看过去一个月的实战代码，拆成 4 个模块：</p>
 
-            <div class="how-to-use">
-                <h4>🔧 三步上手</h4>
-                <div class="use-step">
-                    <div class="step-num-sm">1</div>
-                    <div>
-                        <p><strong>定义角色：</strong>告诉 AI "你是 XX 领域的分析师"，给它一个身份，而不只是任务。</p>
-                    </div>
-                </div>
-                <div class="use-step">
-                    <div class="step-num-sm">2</div>
-                    <div>
-                        <p><strong>拆解流程：</strong>把你的工作拆成 3-5 个步骤，明确每步的输入和输出，让 AI 按顺序执行。</p>
-                    </div>
-                </div>
-                <div class="use-step">
-                    <div class="step-num-sm">3</div>
-                    <div>
-                        <p><strong>给样例：</strong>如果 AI 第一次输出不满意，给它一个你认为"好"的样本，让它照着来。</p>
-                    </div>
-                </div>
+            <div class="code-block">
+<span class="comment"># nps-data skill 目录结构</span>
+<span class="dir">scripts/</span>   <span class="comment">— rawdata 质检 + 汇总生成 + 交叉校验（6个脚本）</span>
+<span class="dir">qc/</span>        <span class="comment">— 月调/年调/新车调研的 QC 流程（6个脚本）</span>
+<span class="dir">trend/</span>     <span class="comment">— 趋势图表 + 品牌计算（8个脚本）</span>
+<span class="dir">factor/</span>    <span class="comment">— RandomForest 因子挖掘</span>
             </div>
 
-            <h3>适用场景举例</h3>
+            <p>一共 <strong>5,377 行 Python，15+ 个可独立运行的脚本</strong>。现在 AI 拿到 NPS 数据，直接调用对应模块，不用重新理解数据结构。</p>
+
+            <h3>Step 3：nps-briefing 的版本地狱</h3>
+            <p>技能包不是一次写好的。nps-briefing（NPS 简报生成器）从 v1 迭代到 v2.8.4，核心战场是<strong>飞书卡片渲染</strong>：</p>
+
             <table>
-                <tr><th>你的工作</th><th>可以自动化的内容</th></tr>
-                <tr><td>市场调研</td><td>问卷设计 → 数据清洗 → 交叉分析 → 报告</td></tr>
-                <tr><td>竞品分析</td><td>信息采集 → 对比表格 → 优劣势总结 → 建议</td></tr>
-                <tr><td>用户访谈</td><td>转录 → 提取关键句 → 归类痛点 → 洞察报告</td></tr>
-                <tr><td>周报/月报</td><td>数据汇总 → 趋势分析 → 异常标注 → 摘要</td></tr>
-                <tr><td>方案撰写</td><td>背景分析 → 方案框架 → 内容填充 → 排版</td></tr>
+                <tr><th>版本</th><th>问题</th><th>解法</th></tr>
+                <tr>
+                    <td><span class="ver-tag">v1</span></td>
+                    <td>用 message 工具发卡片 → 表格渲染成代码块（飞书 bug）</td>
+                    <td>换方案</td>
+                </tr>
+                <tr>
+                    <td><span class="ver-tag">v2</span></td>
+                    <td>改用 feishu_im_message + msg_type=interactive</td>
+                    <td>表格正常了 ✅</td>
+                </tr>
+                <tr>
+                    <td><span class="ver-tag">v2.5</span></td>
+                    <td>柱状图分组不支持</td>
+                    <td>改 markdown 表格 + 进度条</td>
+                </tr>
+                <tr>
+                    <td><span class="ver-tag">v2.8.2</span></td>
+                    <td>add_md() 拆分会导致表格丢失</td>
+                    <td>合并为单个元素</td>
+                </tr>
+                <tr>
+                    <td><span class="ver-tag active">v2.8.4</span></td>
+                    <td>5月26日 Lu 确认最终格式</td>
+                    <td>锁死所有排版规则 🔒</td>
+                </tr>
             </table>
 
-            <div class="quote-box">
-                "AI 不会替你思考'应该做什么'，但会替你把'已经想清楚的事'以 10 倍速度执行出来。关键是：你得先想清楚。"
+            <p>最终的 nps-briefing SKILL.md = <strong>583 行</strong>，包含 11 个区块的固定顺序和每条渲染规则。AI 每次生成简报，严格按这个文件执行，格式不再出错。</p>
+        </div>
+
+        <!-- ========== 4. 你们怎么用上 ========== -->
+        <div class="share-section">
+            <h3><span class="num">4</span> 你们怎么用上</h3>
+            <p>这招适用于所有<strong>"重复性高 + 流程固定 + 需要领域知识"</strong>的工作：</p>
+
+            <div class="how-to-use">
+                <div class="use-category">
+                    <strong>📊 数据类</strong>
+                    <p>月报生成、数据清洗、看板更新 → 打包成 data skill</p>
+                </div>
+                <div class="use-category">
+                    <strong>📝 报告类</strong>
+                    <p>周报/季报/分析报告 → 打包成 briefing skill</p>
+                </div>
+                <div class="use-category">
+                    <strong>🤝 协作类</strong>
+                    <p>审批流程、会议纪要、任务分发 → 打包成 workflow skill</p>
+                </div>
+            </div>
+
+            <div class="info-box success">
+                <strong>✅ 判断标准：</strong>任何你做了 3 次以上的事 → 第 4 次就该变成 skill。不用一开始就完美，先跑通，再迭代。
             </div>
         </div>
 
         <!-- ========== 招式卡 ========== -->
         <div class="technique-card">
-            <h3>🎯 我的招式卡</h3>
+            <h3>🎯 招式卡</h3>
             <div class="card-grid">
                 <div class="card-item">
                     <div class="card-label">招名</div>
-                    <div class="card-value">AI 流水线法：从"问一个问题"到"跑一条产线"</div>
+                    <div class="card-value">重复劳动变技能包</div>
                 </div>
                 <div class="card-divider"></div>
                 <div class="card-item">
                     <div class="card-label">治什么病</div>
-                    <div class="card-value">重复性分析工作耗时长、报告质量不稳定、每次都要从头开始</div>
+                    <div class="card-value">AI 每次接到同类任务都从零开始——重新理解需求、重新写脚本、重新调格式，既慢又不稳定，换个对话就全忘了</div>
                 </div>
                 <div class="card-divider"></div>
                 <div class="card-item">
                     <div class="card-label">三步怎么修</div>
                     <div class="card-value">
-                        ① <strong>定义角色</strong> — 给 AI 一个身份（"你是 XX 分析师"），不只是任务<br>
-                        ② <strong>拆解流程</strong> — 把工作拆成 3-5 步，串成流水线<br>
-                        ③ <strong>给样例校准</strong> — 第一次不满意？给一个"好"的样本让它学
+                        ① <strong>实战跑通，攒够"手感"</strong> — 先在真实任务里反复跑，搞清哪些固定、哪些会变<br>
+                        ② <strong>打包成可复用脚本库</strong> — 做了 3 次以上的事，抽出来写成脚本，按模块组织<br>
+                        ③ <strong>版本迭代打磨到定稿</strong> — 记录每个坑和确认的规则，直到格式锁死
                     </div>
                 </div>
                 <div class="card-divider"></div>
                 <div class="card-item">
                     <div class="card-label">真案例</div>
-                    <div class="card-value">小米汽车 NPS 调研：从 2-3 周压缩到 2-3 天，报告维度更细、质量更高</div>
+                    <div class="card-value">小米 NPS 数据分析：从 62MB PDF 提取失败 → 5,377 行 Python skill → nps-briefing 迭代 7 个版本锁死格式</div>
                 </div>
                 <div class="card-divider"></div>
                 <div class="card-item">
                     <div class="card-label">用在哪</div>
-                    <div class="card-value">任何"数据/信息进 → 结论/报告出"的工作：市场调研、竞品分析、用户访谈、周报月报、方案撰写</div>
+                    <div class="card-value">所有"重复性高 + 流程固定 + 需要领域知识"的工作：数据类（月报/清洗/看板）、报告类（周报/季报/分析）、协作类（审批/纪要/分发）</div>
                 </div>
             </div>
         </div>
 
+        <div class="quote-box">
+            "AI 的记忆会丢，但 skill 文件不会。"
+        </div>
+
         <div class="cta">
-            <h3>从"会用AI"到"让AI帮你干活"</h3>
-            <p>区别只在于：你是问 AI 一道题，还是给 AI 一条流水线。<br>想清楚你要什么，AI 就能帮你跑起来。</p>
+            <h3>先用实战攒经验，再用脚本锁流程</h3>
+            <p>最后用版本迭代打磨到丝滑。<br>任何你做了 3 次以上的事 → 第 4 次就该变成 skill。</p>
         </div>
 
         <div class="page-nav">
